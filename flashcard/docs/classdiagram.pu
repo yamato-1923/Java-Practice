@@ -1,0 +1,28 @@
+@startuml
+class Term {
+    String : term
+    String : description
+}
+class TermController {
+    Term[] getTermList()
+}
+
+class TermService {
+    Term[] getTermList()
+}
+
+interface TermRepositoryIF {
+    Term[] getTermList()
+}
+class TermMemoryRepository {
+    Term[] getTermList()
+}
+
+TermController --> TermService
+TermController --> Term
+TermService --> TermRepositoryIF
+TermService --> Term
+TermMemoryRepository --|> TermRepositoryIF
+TermRepositoryIF --> Term
+TermMemoryRepository --> Term
+@enduml
