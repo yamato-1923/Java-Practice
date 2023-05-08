@@ -12,6 +12,7 @@ import com.flashcard.entity.Term;
 
 @SpringBootTest
 public class TermMemoryRepositoryTests {
+
     @Autowired
     private TermMemoryRepository target;
 

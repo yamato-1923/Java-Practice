@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.flashcard.entity.Term;
 
 @Repository
-public class TermMemoryRepository {
+public class TermMemoryRepository implements TermRepositoryIF {
     private List<Term> termList = new ArrayList<Term>();
 
     public Boolean insertTerm(Term term) {
