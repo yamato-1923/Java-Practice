@@ -1,5 +1,7 @@
 package com.flashcard.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -12,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashcard.entity.Term;
 import com.flashcard.service.TermService;
 
@@ -56,16 +60,22 @@ public class TermControllerTests {
         @Test
         @DisplayName("単語の一覧を取得")
         public void getTermListTest() throws Exception {
-                List<Term> expected = new ArrayList<Term>();
+                List<Term> expectedTermList = new ArrayList<Term>();
                 Term term = new Term("term", "description");
-                expected.add(term);
-                when(mockTermService.getTermList()).thenReturn(expected);
-                mockMvc.perform(
+                expectedTermList.add(term);
+                when(mockTermService.getTermList()).thenReturn(expectedTermList);
+                MvcResult result = mockMvc.perform(
                                 MockMvcRequestBuilders
                                                 .get("/termList"))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(MockMvcResultMatchers.content()
-                                                .string("[{\"term\":\"term\",\"description\":\"description\"}]"));
+                                .andReturn();
+                String actualTerm = result.getResponse().getContentAsString();
+                List<String> expected = new ArrayList<String>();
+                expected.add("\\[\\{\\\"term\\\":\\\"[a-z]+\\\",\\\"description\\\":\\\"[a-z]+\\\",\\\"id\\\":\\\"[0-9a-zA-Z-]+\\\"\\}\\]");
+                List<String> actual = new ArrayList<String>();
+                actual.add(actualTerm);
+                assertLinesMatch(expected, actual);
+
         }
 
 }
