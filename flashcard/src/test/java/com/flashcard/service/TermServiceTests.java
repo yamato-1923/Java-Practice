@@ -12,13 +12,14 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.flashcard.entity.Term;
-import com.flashcard.repository.TermMemoryRepository;
+import com.flashcard.repository.TermH2DBRepository;
+import com.flashcard.repository.TermRepositoryIF;
 
 @SpringBootTest
 public class TermServiceTests {
 
     @Mock
-    private TermMemoryRepository mockTermMemoryRepository;
+    private TermRepositoryIF mockTermRepository;
 
     @InjectMocks
     private TermService target;
@@ -26,7 +27,7 @@ public class TermServiceTests {
     @Test
     public void registerTerm() {
         Term term = new Term("term", "description");
-        when(mockTermMemoryRepository.insertTerm(term)).thenReturn(true);
+        when(mockTermRepository.insertTerm(term)).thenReturn(true);
         Boolean actual = target.registerTerm(term);
         assertEquals(true, actual);
     }
@@ -36,7 +37,7 @@ public class TermServiceTests {
         Term term = new Term("term", "description");
         List<Term> expected = new ArrayList<Term>();
         expected.add(term);
-        when(mockTermMemoryRepository.getTermList()).thenReturn(expected);
+        when(mockTermRepository.getTermList()).thenReturn(expected);
         target.registerTerm(term);
         List<Term> actual = target.getTermList();
         assertEquals(1, actual.size());

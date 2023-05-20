@@ -11,10 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.flashcard.entity.Term;
 
 @SpringBootTest
-public class TermMemoryRepositoryTests {
+public class TermH2DBRepositoryTests {
 
     @Autowired
-    private TermMemoryRepository target;
+    private TermH2DBRepository target;
 
     @Test
     public void insertTermTest() {
@@ -28,6 +28,7 @@ public class TermMemoryRepositoryTests {
         target.insertTerm(term);
         List<Term> actual = target.getTermList();
         assertEquals(1, actual.size());
-        assertEquals(term, actual.get(0));
+        assertEquals("term", actual.get(0).getTerm());
+        assertEquals("description", actual.get(0).getDescription());
     }
 }
