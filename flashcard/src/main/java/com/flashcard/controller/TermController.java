@@ -22,7 +22,7 @@ public class TermController {
 
     @GetMapping("/register")
     public String registerTerm(@RequestParam("term") String term, @RequestParam("description") String description) {
-        if (termService.registerTerm(new Term(term, description))) {
+        if (termService.registerTerm(term, description)) {
             return "Registration of the term is complete";
         }
         return "Registration of the term is failed";

@@ -1,6 +1,5 @@
 package com.flashcard.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -18,7 +17,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashcard.entity.Term;
 import com.flashcard.service.TermService;
 
@@ -34,7 +32,7 @@ public class TermControllerTests {
         @Test
         @DisplayName("単語を登録できることの確認")
         public void registerTermCompleteTest() throws Exception {
-                when(mockTermService.registerTerm(any())).thenReturn(true);
+                when(mockTermService.registerTerm("term", "description")).thenReturn(true);
                 mockMvc.perform(
                         MockMvcRequestBuilders
                                 .get("/register")
@@ -47,7 +45,7 @@ public class TermControllerTests {
         @Test
         @DisplayName("単語を登録できなかったときの確認")
         public void registerTermFailedTest() throws Exception {
-                when(mockTermService.registerTerm(any())).thenReturn(false);
+                when(mockTermService.registerTerm("term", "description")).thenReturn(false);
                 mockMvc.perform(
                         MockMvcRequestBuilders
                                 .get("/register")
@@ -61,7 +59,7 @@ public class TermControllerTests {
         @DisplayName("単語の一覧を取得")
         public void getTermListTest() throws Exception {
                 List<Term> expectedTermList = new ArrayList<Term>();
-                Term term = new Term("term", "description");
+                Term term = new Term("id", "term", "description");
                 expectedTermList.add(term);
                 when(mockTermService.getTermList()).thenReturn(expectedTermList);
                 MvcResult result = mockMvc.perform(
@@ -71,7 +69,7 @@ public class TermControllerTests {
                                 .andReturn();
                 String actualTerm = result.getResponse().getContentAsString();
                 List<String> expected = new ArrayList<String>();
-                expected.add("\\[\\{\\\"term\\\":\\\"[a-z]+\\\",\\\"description\\\":\\\"[a-z]+\\\",\\\"id\\\":\\\"[0-9a-zA-Z-]+\\\"\\}\\]");
+                expected.add("[{\"id\":\"id\",\"term\":\"term\",\"description\":\"description\"}]");
                 List<String> actual = new ArrayList<String>();
                 actual.add(actualTerm);
                 assertLinesMatch(expected, actual);

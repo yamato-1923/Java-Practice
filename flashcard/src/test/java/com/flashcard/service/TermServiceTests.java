@@ -1,6 +1,7 @@
 package com.flashcard.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.flashcard.entity.Term;
-import com.flashcard.repository.TermH2DBRepository;
 import com.flashcard.repository.TermRepositoryIF;
 
 @SpringBootTest
@@ -26,19 +26,17 @@ public class TermServiceTests {
 
     @Test
     public void registerTerm() {
-        Term term = new Term("term", "description");
-        when(mockTermRepository.insertTerm(term)).thenReturn(true);
-        Boolean actual = target.registerTerm(term);
+        when(mockTermRepository.insertTerm(any())).thenReturn(true);
+        Boolean actual = target.registerTerm("term", "description");
         assertEquals(true, actual);
     }
 
     @Test
     public void getTermList() {
-        Term term = new Term("term", "description");
+        Term term = new Term("id", "term", "description");
         List<Term> expected = new ArrayList<Term>();
         expected.add(term);
         when(mockTermRepository.getTermList()).thenReturn(expected);
-        target.registerTerm(term);
         List<Term> actual = target.getTermList();
         assertEquals(1, actual.size());
         assertEquals(term, actual.get(0));

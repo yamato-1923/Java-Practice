@@ -6,9 +6,23 @@ import org.junit.jupiter.api.Test;
 
 public class TermTests {
     @Test
-    void getterTest() {
-        Term target = new Term("term", "description");
+    void getIdTest() {
+        Term target = new Term("id", "term", "description");
+        String actual = target.getId();
+        assertEquals("id", actual);
+    }
+
+    @Test
+    void getTermTest() {
+        Term target = new Term("id", "term", "description");
         String actual = target.getTerm();
         assertEquals("term", actual);
+    }
+
+    @Test
+    void getDescriptionTest() {
+        Term target = new Term("id", "term", "description");
+        String actual = target.getDescription();
+        assertEquals("description", actual);
     }
 }
