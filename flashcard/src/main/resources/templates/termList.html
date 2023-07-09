@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>registerForm</title>
+</head>
+<title>用語リスト</title>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+</style>
+</head>
+
+<body>
+    <h1>登録単語一覧</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>単語</th>
+                <th>説明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 繰り返し処理で用語リストを表示 -->
+            <th:block th:each="term : ${termList}">
+                <tr>
+                    <td th:text="${term.term}"></td>
+                    <td th:text="${term.description}"></td>
+                </tr>
+            </th:block>
+        </tbody>
+    </table>
+    <!-- <form method="get" action="/question">
+				<button type="submit">問題出題画面</button>
+			</form> -->
+</body>
+
+</html>

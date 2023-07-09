@@ -1,5 +1,6 @@
 package com.flashcard.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -17,11 +18,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashcard.entity.Term;
 import com.flashcard.service.TermService;
 
-@WebMvcTest(TermController.class)
-public class TermControllerTests {
+@WebMvcTest(HtmlTermController.class)
+public class HtmlTermControllerTests {
 
         @Autowired
         private MockMvc mockMvc;
@@ -30,50 +32,53 @@ public class TermControllerTests {
         private TermService mockTermService;
 
         @Test
-        @DisplayName("単語を登録できることの確認")
-        public void registerTermCompleteTest() throws Exception {
-                when(mockTermService.registerTerm("term", "description")).thenReturn(true);
+        @DisplayName("単語の登録ページが表示されることの確認")
+        public void showHtmlRegisterFormTest() throws Exception {
                 mockMvc.perform(
-                        MockMvcRequestBuilders
-                                .get("/register")
-                                .param("term", "term")
-                                .param("description", "description"))
-                        .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.content().string("Registration of the term is complete"));
+                                MockMvcRequestBuilders
+                                                .get("/htmlRegisterForm"))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.view().name("registerForm"));
         }
 
         @Test
-        @DisplayName("単語を登録できなかったときの確認")
+        @DisplayName("単語登録成功時に成功ページが表示されることの確認")
+        public void registerTermSuccessTest() throws Exception {
+                when(mockTermService.registerTerm("term", "description")).thenReturn(true);
+                mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/htmlRegister")
+                                .param("term", "term")
+                                .param("description", "description"))
+                        .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andExpect(MockMvcResultMatchers.view().name("successRegisterForm"));
+        }
+
+        @Test
+        @DisplayName("単語登録失敗時に失敗ページが表示されることの確認")
         public void registerTermFailedTest() throws Exception {
                 when(mockTermService.registerTerm("term", "description")).thenReturn(false);
                 mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get("/register")
+                                .post("/htmlRegister")
                                 .param("term", "term")
                                 .param("description", "description"))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.content().string("Registration of the term is failed"));
+                        .andExpect(MockMvcResultMatchers.view().name("failedRegisterForm"));
         }
 
         @Test
-        @DisplayName("単語の一覧を取得")
-        public void getTermListTest() throws Exception {
-                List<Term> expectedTermList = new ArrayList<Term>();
-                Term term = new Term("id", "term", "description");
-                expectedTermList.add(term);
-                when(mockTermService.getTermList()).thenReturn(expectedTermList);
-                MvcResult result = mockMvc.perform(
+        @DisplayName("単語一覧ページが表示されることの確認")
+        public void termListTest() throws Exception {
+                List<Term> termList = new ArrayList<Term>();
+                termList.add(new Term("id", "term", "description"));
+                when(mockTermService.getTermList()).thenReturn(termList);
+                mockMvc.perform(
                                 MockMvcRequestBuilders
-                                                .get("/termList"))
+                                                .get("/htmlTermList"))
                                 .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andReturn();
-                String actualTerm = result.getResponse().getContentAsString();
-                List<String> expected = new ArrayList<String>();
-                expected.add("[{\"id\":\"id\",\"term\":\"term\",\"description\":\"description\"}]");
-                List<String> actual = new ArrayList<String>();
-                actual.add(actualTerm);
-                assertLinesMatch(expected, actual);
-
+                                .andExpect(MockMvcResultMatchers.view().name("termList"))
+                                .andExpect(MockMvcResultMatchers.model().attribute("termList", termList));
         }
 
 }

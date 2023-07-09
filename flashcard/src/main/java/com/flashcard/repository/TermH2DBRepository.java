@@ -21,7 +21,8 @@ public class TermH2DBRepository implements TermRepositoryIF {
 
     public Boolean insertTerm(Term term) {
         int rowNumber = jdbcTemplate.update(
-                "INSERT INTO TERM(TERM,DESCRIPTION) VALUES(?,?)", term.getTerm(), term.getDescription());
+                "INSERT INTO TERM(ID,TERM,DESCRIPTION) VALUES(?,?,?)", term.getId(), term.getTerm(),
+                term.getDescription());
         return rowNumber == 1;
     }
 
@@ -29,7 +30,8 @@ public class TermH2DBRepository implements TermRepositoryIF {
         List<Map<String, Object>> mapResult = jdbcTemplate.queryForList("SELECT * FROM TERM");
         List<Term> result = new ArrayList<Term>();
         for (Map<String, Object> map : mapResult) {
-            Term term = new Term(map.get("term").toString(), map.get("description").toString());
+            Term term = new Term(map.get("id").toString(), map.get("term").toString(),
+                    map.get("description").toString());
             result.add(term);
         }
         return result;

@@ -1,18 +1,16 @@
 package com.flashcard.entity;
 
-import java.util.UUID;
-
 import lombok.Getter;
 
 @Getter
 public class Term {
 
-    private String Id;
+    private String id;
     private String term;
     private String description;
 
-    public Term(String term, String description) {
-        this.Id = UUID.randomUUID().toString();
+    public Term(String id, String term, String description) {
+        this.id = id;
         this.term = term;
         this.description = description;
     }

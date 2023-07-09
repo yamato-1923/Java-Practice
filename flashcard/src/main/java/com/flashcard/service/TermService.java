@@ -1,6 +1,7 @@
 package com.flashcard.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,9 @@ public class TermService {
         this.termRepository = termRepository;
     }
 
-    public Boolean registerTerm(Term term) {
-        return termRepository.insertTerm(term);
+    // TODO: ここでTermインスタンスを生成する、ID生成もこのクラスでやる
+    public Boolean registerTerm(String term, String description) {
+        return termRepository.insertTerm(new Term(UUID.randomUUID().toString(), term, description));
     }
 
     public List<Term> getTermList() {
