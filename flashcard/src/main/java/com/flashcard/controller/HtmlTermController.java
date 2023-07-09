@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,8 +37,10 @@ public class HtmlTermController {
         return "failedRegisterForm";
     }
 
-    // @GetMapping("/htmlTermList")
-    // public List<Term> getTermList() {
-    // return this.termService.getTermList();
-    // }
+    @GetMapping("/htmlTermList")
+    public String getTermList(Model model) {
+        List<Term> termList = termService.getTermList();
+        model.addAttribute("termList", termList);
+        return "termList";
+    }
 }

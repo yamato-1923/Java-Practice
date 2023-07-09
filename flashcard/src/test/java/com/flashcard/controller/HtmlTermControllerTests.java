@@ -67,4 +67,18 @@ public class HtmlTermControllerTests {
                         .andExpect(MockMvcResultMatchers.view().name("failedRegisterForm"));
         }
 
+        @Test
+        @DisplayName("単語一覧ページが表示されることの確認")
+        public void termListTest() throws Exception {
+                List<Term> termList = new ArrayList<Term>();
+                termList.add(new Term("id", "term", "description"));
+                when(mockTermService.getTermList()).thenReturn(termList);
+                mockMvc.perform(
+                                MockMvcRequestBuilders
+                                                .get("/htmlTermList"))
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.view().name("termList"))
+                                .andExpect(MockMvcResultMatchers.model().attribute("termList", termList));
+        }
+
 }
